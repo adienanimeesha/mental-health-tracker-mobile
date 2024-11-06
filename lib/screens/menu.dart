@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mental_health_tracker/widgets/left_drawer.dart';
-import 'package:mental_health_tracker/mood_card.dart';
+import 'package:mental_health_tracker/widgets/mood_card.dart';
 
 class MyHomePage extends StatelessWidget {
   final String npm = '2306170912'; // NPM
@@ -81,10 +81,11 @@ class MyHomePage extends StatelessWidget {
                     shrinkWrap: true,
 
                     // Display ItemCard for each item in the items list.
-                    children: items.map((ItemHomepage item) {
+                    // Ensure the items list is correctly mapped to a List<Widget>
+                    children: items.map<Widget>((ItemHomepage item) {
                       return ItemCard(item);
-                    
                     }).toList(),
+
                   ),
                 ],
               ),
