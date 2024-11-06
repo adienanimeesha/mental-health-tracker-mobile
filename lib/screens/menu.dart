@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mental_health_tracker/widgets/left_drawer.dart';
+import 'package:mental_health_tracker/mood_card.dart';
 
 class MyHomePage extends StatelessWidget {
   final String npm = '2306170912'; // NPM
@@ -22,12 +24,14 @@ class MyHomePage extends StatelessWidget {
           'Mental Health Tracker',
           style: TextStyle(
             color: Colors.white,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.bold
           ),
         ),
         // The background color of the AppBar is obtained from the application theme color scheme.
         backgroundColor: Theme.of(context).colorScheme.primary,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
+      drawer: const LeftDrawer(),
       // Body of the page with paddings around it.
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -79,6 +83,7 @@ class MyHomePage extends StatelessWidget {
                     // Display ItemCard for each item in the items list.
                     children: items.map((ItemHomepage item) {
                       return ItemCard(item);
+                    
                     }).toList(),
                   ),
                 ],
@@ -90,67 +95,6 @@ class MyHomePage extends StatelessWidget {
     );
   }
 }
-
-class ItemCard extends StatelessWidget {
-  // Display the card with an icon and name.
-
-  final ItemHomepage item; 
-  
-  const ItemCard(this.item, {super.key}); 
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      // Specify the background color of the application theme.
-      color: Theme.of(context).colorScheme.secondary,
-      // Round the card border.
-      borderRadius: BorderRadius.circular(12),
-      
-      child: InkWell(
-        // Action when the card is pressed.
-        onTap: () {
-          // Display the SnackBar message when the card is pressed.
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(content: Text("You have pressed the ${item.name} button!"))
-            );
-        },
-        // Container to store the Icon and Text
-        child: Container(
-          padding: const EdgeInsets.all(8),
-          child: Center(
-            child: Column(
-              // Place the Icon and Text in the center of the card.
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  item.icon,
-                  color: Colors.white,
-                  size: 30.0,
-                ),
-                const Padding(padding: EdgeInsets.all(3)),
-                Text(
-                  item.name,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-  
-}
-
-class ItemHomepage {
-     final String name;
-     final IconData icon;
-
-     ItemHomepage(this.name, this.icon);
- }
 
 class InfoCard extends StatelessWidget {
   // Card information that displays the title and content.
