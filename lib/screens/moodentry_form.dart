@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mental_health_tracker/widgets/left_drawer.dart';
+import 'package:mental_health_tracker/screens/menu.dart';
 
 class MoodEntryFormPage extends StatefulWidget {
   const MoodEntryFormPage({super.key});
@@ -16,7 +17,9 @@ class _MoodEntryFormPageState extends State<MoodEntryFormPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    final request = context.watch<CookieRequest>();
+
+    return Scaffold({}
       appBar: AppBar(
         title: const Center(
           child: Text(
@@ -115,29 +118,39 @@ class _MoodEntryFormPageState extends State<MoodEntryFormPage> {
                         Theme.of(context).colorScheme.primary,
                       ),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        // Display a pop-up with the entered values
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: const Text("Mood Entry Saved"),
-                              content: Text(
-                                "Mood: $_mood\nFeelings: $_feelings\nMood Intensity: $_moodIntensity",
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text("OK"),
-                                ),
-                              ],
-                            );
-                          },
-                        );
+                          // Send request to Django and wait for the response
+                          // TODO: Change the URL to your Django app's URL. Don't forget to add the trailing slash (/) if needed.
+                          final response = await request.postJson(
+                              "http://localhost:8000/create-flutter/",
+                              jsonEncode(<String, String>{
+                                  'mood': _mood,
+                                  'mood_intensity': _moodIntensity.toString(),
+                                  'feelings': _feelings,
+                              // TODO: Adjust the fields with your project
+                              }),
+                          );
+                          if (context.mounted) {
+                              if (response['status'] == 'success') {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(const SnackBar(
+                                  content: Text("New mood has saved successfully!"),
+                                  ));
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => MyHomePage()),
+                                  );
+                              } else {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(const SnackBar(
+                                      content:
+                                          Text("Something went wrong, please try again."),
+                                  ));
+                              }
+                          }
                       }
+                  },
                     },
                     child: const Text(
                       "Save",
